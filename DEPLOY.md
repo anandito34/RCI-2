@@ -28,31 +28,25 @@ Supaya tidak diminta kartu kredit oleh Render, kita pakai database terpisah:
 
 ---
 
-## ⚙️ 3. Deployment Backend (via Render)
+## ⚙️ 3. Deployment Backend (via Koyeb)
 
-*Catatan: Kita tidak menggunakan menu "Blueprint" karena Render mewajibkan kartu kredit untuk Blueprint. Kita akan membuat "Web Service" manual (Bebas Kartu Kredit).*
+Karena Render sekarang mewajibkan kartu kredit untuk semua pendaftaran baru (meskipun gratis), kita akan memindahkan Backend kita ke **Koyeb** (100% Gratis Tanpa Kartu Kredit).
 
-1. Buka [render.com](https://render.com) dan daftar/login.
-2. Di dashboard Render, klik tombol **New** > **Web Service**.
-3. Hubungkan akun GitHub Anda dan pilih repository project ini.
-4. Di bagian pengisian formulir rincian Web Service, isi seperti ini:
-   - **Name**: `rci-backend`
-   - **Region**: `Singapore (AWS)`
-   - **Branch**: `main`
-   - **Root Directory**: `backend` (⚠️ **Sangat Penting!** Ketik kata `backend` di sini)
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Instance Type**: Pilih yang `Free` ($0/month)
-5. Jangan klik Deploy dulu! *Scroll* ke bawah dan klik tombol **Advanced** > **Add Environment Variable**. Masukkan kelima Variabel ini:
-   - `SECRET_KEY` = `bebas-isi-apa-saja-yang-rumit`
+1. Buka [koyeb.com](https://app.koyeb.com/) dan daftar menggunakan akun GitHub Anda.
+2. Di Dashboard Koyeb, klik **Create Web Service**.
+3. Pilih opsi **GitHub** dan berikan akses ke repository project ini.
+4. Pilih **Builder**: Pilih opsi **Dockerfile** (agar Koyeb memakai konfigurasi Docker yang nanti akan kita tambahkan).
+   - Di bagian *Override Builder*, biarkan kosong/default.
+5. Di bagian **Environment Variables**, klik *Add Variable* dan masukkan 5 rahasia ini:
+   - `SECRET_KEY` = `rahasia_app_konsultasi_123`
    - `ALGORITHM` = `HS256`
    - `ACCESS_TOKEN_EXPIRE_MINUTES` = `60`
-   - `DATABASE_URL` = *(Paste URL koneksi dari Neon.tech)*
-   - `CORS_ORIGINS` = `https://your-frontend.vercel.app` (Biarkan default ini dulu, nanti diganti dengan URL Vercel)
-6. Setelah semua terisi, klik **Create Web Service**.
-7. Tunggu Render melakukan deploy sampai selesai.
-8. Catat **URL Backend** aplikasi Anda yang muncul di sudut kiri atas (misal: `https://rci-backend.onrender.com`).
+   - `DATABASE_URL` = *(Paste URL koneksi postgresql dari Neon.tech)*
+   - `CORS_ORIGINS` = `https://your-frontend.vercel.app` (Biarkan default ini dulu)
+6. Di bagian **Instance**, pilih opsi **Free / Eco** ($0/mo).
+7. Di bagian **Regions**, pilih **Singapore (Sin)**.
+8. Beri nama App Anda (misal: `rci-backend`) lalu klik **Deploy**.
+9. Tunggu hingga statusnya *Healthy*. Catat **Public URL** backend Anda (misal: `https://rci-backend-blabla.koyeb.app`).
 
 ---
 
