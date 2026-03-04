@@ -4,17 +4,14 @@ FROM python:3.11-slim
 # Set working directory di dalam container
 WORKDIR /app
 
-# Copy file requirements terlebih dahulu (untuk memanfaatkan cache layer Docker)
-COPY backend/requirements.txt .
+# Copy seluruh file backend ke dalam container (langsung ke root /app)
+COPY backend/ .
 
 # Install dependencies sistem yang diperlukan oleh postgres (psycopg2)
 RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
 
-# Install python dependencies
+# Install python dependencies dari requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy seluruh file backend ke dalam container
-COPY backend/ .
 
 # Expose port yang digunakan
 EXPOSE 8000
