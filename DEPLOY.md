@@ -28,25 +28,29 @@ Supaya tidak diminta kartu kredit oleh Render, kita pakai database terpisah:
 
 ---
 
-## ⚙️ 3. Deployment Backend (via Koyeb)
+## ⚙️ 3. Deployment Backend (via Back4App Containers)
 
-Karena Render sekarang mewajibkan kartu kredit untuk semua pendaftaran baru (meskipun gratis), kita akan memindahkan Backend kita ke **Koyeb** (100% Gratis Tanpa Kartu Kredit).
+Karena layanan lain (Render & Koyeb) saat ini sedang agresif mewajibkan kartu kredit untuk verifikasi bot, kita pindahkan backend kita ke **Back4App Containers** yang 100% Bebas Kartu Kredit.
 
-1. Buka [koyeb.com](https://app.koyeb.com/) dan daftar menggunakan akun GitHub Anda.
-2. Di Dashboard Koyeb, klik **Create Web Service**.
-3. Pilih opsi **GitHub** dan berikan akses ke repository project ini.
-4. Pilih **Builder**: Pilih opsi **Dockerfile** (agar Koyeb memakai konfigurasi Docker yang nanti akan kita tambahkan).
-   - Di bagian *Override Builder*, biarkan kosong/default.
-5. Di bagian **Environment Variables**, klik *Add Variable* dan masukkan 5 rahasia ini:
+1. Buka [back4app.com/containers](https://www.back4app.com/containers) dan klik **Start for Free**.
+2. Daftar menggunakan akun GitHub Anda.
+3. Setelah masuk Dashboard, klik tombol **Build a new app**.
+4. Pilih opsi **Containers as a Service (CaaS)** (jika ditanya).
+5. Hubungkan GitHub dan pilih repository project ini.
+6. Pada pengisian "Create App":
+   - **App Name**: `rci-backend` (atau nama unik lainnya)
+   - **Branch**: `main`
+   - *Root Directory* biarkan kosong.
+   - **Port**: Isi dengan `8000` (Penting!)
+7. *Scroll* ke bawah dan klik tombol **Environment Variables**, lalu masukkan 5 kunci rahasia ini:
    - `SECRET_KEY` = `rahasia_app_konsultasi_123`
    - `ALGORITHM` = `HS256`
    - `ACCESS_TOKEN_EXPIRE_MINUTES` = `60`
    - `DATABASE_URL` = *(Paste URL koneksi postgresql dari Neon.tech)*
    - `CORS_ORIGINS` = `https://your-frontend.vercel.app` (Biarkan default ini dulu)
-6. Di bagian **Instance**, pilih opsi **Free / Eco** ($0/mo).
-7. Di bagian **Regions**, pilih **Singapore (Sin)**.
-8. Beri nama App Anda (misal: `rci-backend`) lalu klik **Deploy**.
-9. Tunggu hingga statusnya *Healthy*. Catat **Public URL** backend Anda (misal: `https://rci-backend-blabla.koyeb.app`).
+8. Klik tombol **Deploy** atau **Create App** di paling bawah.
+9. Tunggu beberapa menit hingga status aplikasinya berwarna Hijau (🟢 *Ready*).
+10. Catat **URL Backend** Anda yang ada kotak hijau di kiri atas layar (formatnya `rci-backend-blabla.b4a.run`).
 
 ---
 
