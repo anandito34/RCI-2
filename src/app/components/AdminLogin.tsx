@@ -74,7 +74,7 @@ export function AdminLogin({ onAuthSuccess }: AdminLoginProps) {
                         {error && (
                             <div className="p-4 bg-red-50 text-red-600 rounded-xl text-xs font-bold ring-1 ring-red-100 flex items-start gap-3">
                                 <span className="text-red-500 uppercase tracking-widest text-[10px] mt-0.5 shrink-0">Error</span>
-                                {error}
+                                <span>{error}</span>
                             </div>
                         )}
 
@@ -119,7 +119,7 @@ export function AdminLogin({ onAuthSuccess }: AdminLoginProps) {
                                 <Loader2 className="size-5 animate-spin" />
                             ) : (
                                 <>
-                                    Secure Access
+                                    <span>Secure Access</span>
                                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                                 </>
                             )}
