@@ -26,8 +26,13 @@ app.mount("/api/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
-# Setup CORS — configurable via CORS_ORIGINS env var
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://localhost:3001").split(",")
+# Setup CORS — hardcoded to ensure Vercel frontend connectivity
+cors_origins = [
+    "https://rci-2.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:3001"
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
