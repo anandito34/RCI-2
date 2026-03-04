@@ -29,17 +29,30 @@ Supaya tidak diminta kartu kredit oleh Render, kita pakai database terpisah:
 ---
 
 ## ⚙️ 3. Deployment Backend (via Render)
-Aplikasi sudah disiapkan dengan Blueprint `render.yaml` untuk deploy mudah:
+
+*Catatan: Kita tidak menggunakan menu "Blueprint" karena Render mewajibkan kartu kredit untuk Blueprint. Kita akan membuat "Web Service" manual (Bebas Kartu Kredit).*
 
 1. Buka [render.com](https://render.com) dan daftar/login.
-2. Di dashboard Render, klik tombol **New** > **Blueprint**.
+2. Di dashboard Render, klik tombol **New** > **Web Service**.
 3. Hubungkan akun GitHub Anda dan pilih repository project ini.
-4. Render otomatis membaca file `render.yaml`. Klik **Approve**.
-5. Setelah *Web Service* terbuat, masuk ke tab **Environment** pada servis tersebut.
-6. Cari *Environment Variable* bernama `DATABASE_URL`.
-7. **Paste URL / Connection String** dari Neon.tech yang dicopy di Langkah 2, lalu klik **Save Changes**.
-8. Tunggu Render melakukan deploy sampai selesai.
-9. Catat **URL Backend** aplikasi Anda (misal: `https://rci-backend.onrender.com`).
+4. Di bagian pengisian formulir rincian Web Service, isi seperti ini:
+   - **Name**: `rci-backend`
+   - **Region**: `Singapore (AWS)`
+   - **Branch**: `main`
+   - **Root Directory**: `backend` (⚠️ **Sangat Penting!** Ketik kata `backend` di sini)
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - **Instance Type**: Pilih yang `Free` ($0/month)
+5. Jangan klik Deploy dulu! *Scroll* ke bawah dan klik tombol **Advanced** > **Add Environment Variable**. Masukkan kelima Variabel ini:
+   - `SECRET_KEY` = `bebas-isi-apa-saja-yang-rumit`
+   - `ALGORITHM` = `HS256`
+   - `ACCESS_TOKEN_EXPIRE_MINUTES` = `60`
+   - `DATABASE_URL` = *(Paste URL koneksi dari Neon.tech)*
+   - `CORS_ORIGINS` = `https://your-frontend.vercel.app` (Biarkan default ini dulu, nanti diganti dengan URL Vercel)
+6. Setelah semua terisi, klik **Create Web Service**.
+7. Tunggu Render melakukan deploy sampai selesai.
+8. Catat **URL Backend** aplikasi Anda yang muncul di sudut kiri atas (misal: `https://rci-backend.onrender.com`).
 
 ---
 
