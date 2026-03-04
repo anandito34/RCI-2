@@ -12,11 +12,11 @@ def seed_admin():
                 full_name="Super Admin RCI",
                 email=admin_email,
                 role="admin",
-                hashed_password=get_password_hash("admin123")
+                hashed_password=get_password_hash("rci_admin_secret_2024")
             )
             db.add(new_admin)
             db.commit()
-            print(f"✅ Admin user created successfully:\nEmail: {admin_email}\nPassword: admin123")
+            print(f"✅ Admin user created successfully:\nEmail: {admin_email}\nPassword: rci_admin_secret_2024")
         else:
             print("ℹ️ Admin user already exists.")
     except Exception as e:

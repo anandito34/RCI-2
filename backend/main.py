@@ -14,8 +14,10 @@ import models
 import schemas
 import auth
 from database import engine, get_db
+from seed_admin import seed_admin
 
 models.Base.metadata.create_all(bind=engine)
+seed_admin()
 
 app = FastAPI(title="RCI Legal Consultation API")
 
