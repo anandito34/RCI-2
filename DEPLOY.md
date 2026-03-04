@@ -1,57 +1,68 @@
-# Panduan Deployment (Step-by-Step)
+# Panduan Deployment (Step-by-Step) — 100% GRATIS (Tanpa Kartu Kredit)
 
-Aplikasi ini siap di-deploy dengan arsitektur terpisah:
-- **Backend (FastAPI)**: Render (Gratis)
-- **Frontend (React)**: Vercel (Gratis)
-- **Database**: Render PostgreSQL
+Aplikasi ini siap di-deploy dengan arsitektur:
+- **Database (PostgreSQL)**: Neon.tech (Gratis, Tanpa CC)
+- **Backend (FastAPI)**: Render Web Service (Gratis, Tanpa CC)
+- **Frontend (React)**: Vercel (Gratis, Tanpa CC)
 
 ---
 
 ## 🚀 1. Persiapan GitHub
-1. Buat repository baru di GitHub.
-2. Push semua kode ke repository tersebut.
+1. Buat repository baru di GitHub (kosong, jangan centang README/gitignore).
+2. Buka terminal proyek ini, lalu jalankan:
    ```bash
-   git add .
-   git commit -m "Ready for production"
    git branch -M main
+   git remote add origin https://github.com/USERNAME/NAMA_REPO.git
    git push -u origin main
    ```
 
 ---
 
-## 🐘 2. Deployment Backend (via Render)
+## 🐘 2. Buat Database (via Neon.tech)
+Supaya tidak diminta kartu kredit oleh Render, kita pakai database terpisah:
+1. Buka [neon.tech](https://neon.tech) dan daftar dengan GitHub/Google.
+2. Buat project baru (nama bebas, e.g., `rci-db`).
+3. Di *Dashboard* utama Neon, cari kotak **Connection Details**.
+4. Di bagian *Connection string*, **copy URL-nya** (formatnya: `postgresql://user:password@hostname/dbname?sslmode=require`).
+5. Simpan URL ini, kita akan memakainya di Render.
 
-Aplikasi sudah disiapkan dengan Blueprint `render.yaml` untuk 1-click deploy!
+---
 
-1. Buat akun di [Render](https://render.com).
+## ⚙️ 3. Deployment Backend (via Render)
+Aplikasi sudah disiapkan dengan Blueprint `render.yaml` untuk deploy mudah:
+
+1. Buka [render.com](https://render.com) dan daftar/login.
 2. Di dashboard Render, klik tombol **New** > **Blueprint**.
 3. Hubungkan akun GitHub Anda dan pilih repository project ini.
-4. Render akan otomatis membaca file `render.yaml`.
-5. Klik **Approve** untuk membuat Web Service (Python) dan PostgreSQL database sekaligus.
-6. Tunggu hingga deploy selesai, lalu catat **URL Backend** (misal: `https://rci-backend.onrender.com`).
+4. Render otomatis membaca file `render.yaml`. Klik **Approve**.
+5. Setelah *Web Service* terbuat, masuk ke tab **Environment** pada servis tersebut.
+6. Cari *Environment Variable* bernama `DATABASE_URL`.
+7. **Paste URL / Connection String** dari Neon.tech yang dicopy di Langkah 2, lalu klik **Save Changes**.
+8. Tunggu Render melakukan deploy sampai selesai.
+9. Catat **URL Backend** aplikasi Anda (misal: `https://rci-backend.onrender.com`).
 
 ---
 
-## 🌐 3. Deployment Frontend (via Vercel)
+## 🌐 4. Deployment Frontend (via Vercel)
 
-1. Buat akun di [Vercel](https://vercel.com).
-2. Klik **Add New...** > **Project**.
+1. Buka [vercel.com](https://vercel.com) dan login/daftar.
+2. Di beranda, klik **Add New...** > **Project**.
 3. Hubungkan akun GitHub dan pilih repository project ini.
-4. Di bagian **Environment Variables**, tambahkan:
-   - `VITE_API_URL` = `https://rci-backend.onrender.com` (Ganti dengan URL dari Render)
-   - `VITE_WS_URL` = `wss://rci-backend.onrender.com` (Ubah awalan https jadi wss)
+4. Di bagian **Environment Variables** (sebelum menekan Deploy), tambahkan dua baris ini:
+   - `VITE_API_URL` = `https://rci-backend.onrender.com` (Ubah sesuai URL Backend Render Anda)
+   - `VITE_WS_URL` = `wss://rci-backend.onrender.com` (Sama seperti atas, tapi ubah awalan `https` menjadi `wss`)
 5. Klik **Deploy**.
-6. Vercel akan otomatis mengenali project Vite + React. Configuration route SPA sudah diatur via `vercel.json`!
-7. Catat **URL Frontend** (misal: `https://rci-frontend.vercel.app`).
+6. Vercel akan otomatis mengenali Vite. Rute antar halaman juga sudah diatur aman dengan `vercel.json`!
+7. Setelah selesai, catat **URL Frontend** Anda (misal: `https://rci-frontend.vercel.app`).
 
 ---
 
-## 🔗 4. Koneksikan Ulang (Update CORS)
+## 🔗 5. Finalisasi (Koneksikan Frontend & Backend)
 
-Supaya backend di Render bisa menerima request dari Vercel:
-1. Buka dashboard Render > Pilih aplikasi `rci-backend` > tab **Environment**.
-2. Tambahkan / Update variabel:
-   - `CORS_ORIGINS` = `https://rci-frontend.vercel.app` (URL Vercel Anda, TANPA slash di akhir)
-3. Save changes (Render akan me-restart backend otomatis).
+Sekarang kita berikan akses ke Backend agar mau menerima request dari Vercel:
+1. Kembali ke Dashboard Render > Pilih web service `rci-backend` > tab **Environment**.
+2. Update nama variabel yang ada:
+   - `CORS_ORIGINS` = `https://rci-frontend.vercel.app` (URL Vercel Anda, **TANPA tanda `/` di akhir**)
+3. Klik **Save Changes** (Render akan me-restart backend otomatis sesuai pengaturan baru).
 
-✅ **Selesai! Aplikasi Anda sudah online sepenuhnya.**
+✅ **Selesai! Aplikasi Konsultasi Hukum 100% online siap dipakai!**
