@@ -1,0 +1,3 @@
+src/app/components/ConsultationView.tsx(2,27): error TS6133: 'LogOut' is declared but its value is never read.
+src/app/components/ConsultationView.tsx(2,35): error TS6133: 'Search' is declared but its value is never read.
+src/app/components/ConsultationView.tsx(2,83): error TS6133: 'Smile' is declared but its value is never read.

@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: rci-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rci-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://your-frontend.vercel.app
+
+databases:
+  - name: rci-db
+    plan: free
+    databaseName: rci_legal
+    user: rci_user
