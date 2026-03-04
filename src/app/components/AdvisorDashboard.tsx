@@ -34,6 +34,8 @@ export function AdvisorDashboard({ onBack, userEmail }: AdvisorDashboardProps) {
     const [chatHistories, setChatHistories] = useState<Record<number, ChatMessage[]>>({});
     const [inputText, setInputText] = useState('');
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+    const [isVerified, setIsVerified] = useState<boolean>(false);
+    const [isProfileCompleted, setIsProfileCompleted] = useState<boolean>(false);
     const [activeClients, setActiveClients] = useState<ActiveClient[]>([]);
     const [isLoadingClients, setIsLoadingClients] = useState(false);
 
@@ -42,7 +44,7 @@ export function AdvisorDashboard({ onBack, userEmail }: AdvisorDashboardProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Fetch current user (lawyer) ID
+    // Fetch current user (lawyer) ID and status
     useEffect(() => {
         const fetchUser = async () => {
             const token = localStorage.getItem('rci_token');
@@ -52,6 +54,13 @@ export function AdvisorDashboard({ onBack, userEmail }: AdvisorDashboardProps) {
                     if (res.ok) {
                         const data = await res.json();
                         setCurrentUserId(data.id);
+                        setIsVerified(data.is_verified);
+                        setIsProfileCompleted(data.is_profile_completed);
+
+                        // Auto-open profile modal if not completed
+                        if (!data.is_profile_completed) {
+                            setIsProfileModalOpen(true);
+                        }
                     }
                 } catch (e) {
                     console.error("Failed fetching user", e);
@@ -274,6 +283,52 @@ export function AdvisorDashboard({ onBack, userEmail }: AdvisorDashboardProps) {
                         </form>
                     </div>
                 </div>
+            </div>
+        );
+    }
+
+    // PENDING VERIFICATION VIEW
+    if (isProfileCompleted && !isVerified) {
+        return (
+            <div className="min-h-screen bg-[#F8F9FA] flex flex-col font-sans">
+                {/* Header */}
+                <header className="bg-white/40 backdrop-blur-3xl border-b border-[#1A1C1E]/5 px-8 py-6 sticky top-0 z-20 flex justify-between items-center">
+                    <h1 className="text-xl font-black text-[#1A1C1E] tracking-tight">Advisor Control Panel</h1>
+                    <button
+                        onClick={onBack}
+                        className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                    >
+                        <LogOut className="size-4" />
+                        Logout
+                    </button>
+                </header>
+
+                <main className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full p-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="size-24 rounded-full bg-[#D4AF37]/10 flex items-center justify-center mb-8 border-4 border-white shadow-xl shadow-[#D4AF37]/20">
+                        <RefreshCw className="size-10 text-[#D4AF37] animate-[spin_3s_linear_infinite]" />
+                    </div>
+                    <h2 className="text-4xl font-black text-[#1A1C1E] tracking-tight mb-4">Menunggu Verifikasi</h2>
+                    <p className="text-[#1A1C1E]/60 text-lg font-medium leading-relaxed mb-8">
+                        Terima kasih <span className="font-bold text-[#1A1C1E]">{userEmail.split('@')[0]}</span> telah melengkapi profil Anda. Tim internal kami sedang memverifikasi identitas dan lisensi advokat Anda demi menjaga kualitas platform.
+                    </p>
+                    <div className="bg-white rounded-2xl p-6 shadow-lg shadow-black/5 border border-[#1A1C1E]/5 w-full">
+                        <h4 className="font-bold text-[#1A1C1E] mb-2 text-sm uppercase tracking-widest text-[#D4AF37]">Tahap Selanjutnya</h4>
+                        <ol className="text-left text-sm font-medium text-[#1A1C1E]/60 space-y-3 mt-4">
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 size-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">✓</span>
+                                Profil berhasil dikirim
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 size-6 rounded-full bg-[#D4AF37] text-white flex items-center justify-center font-bold text-xs animate-pulse">2</span>
+                                Review dokumen legal oleh Tim Admin RCI
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="flex-shrink-0 size-6 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center font-bold text-xs">3</span>
+                                Akun aktif dan siap menerima klien
+                            </li>
+                        </ol>
+                    </div>
+                </main>
             </div>
         );
     }
