@@ -13,8 +13,5 @@ RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/li
 # Install python dependencies dari requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port yang digunakan
-EXPOSE 8000
-
-# Jalankan Uvicorn server
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Jalankan Uvicorn server menggunakan port dari environment variable (wajib untuk layanan cloud seperti Back4App)
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
