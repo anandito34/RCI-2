@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: rci-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_6l8QmSUDiHTE@ep-lingering-river-a1ycnlc3-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+      - key: PYTHON_VERSION
+        value: "3.11"
