@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Back4App requires EXPOSE declaration to launch the container
 EXPOSE 8000
 
-# Jalankan Uvicorn server menggunakan port dari environment variable (wajib untuk layanan cloud seperti Back4App)
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Jalankan Uvicorn server secara eksplisit pada port 8000 agar sesuai dengan EXPOSE Back4App
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
