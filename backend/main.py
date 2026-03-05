@@ -56,6 +56,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
 def read_root():
     return {"message": "Welcome to RCI Legal Consultation API"}
 
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    return {"message": "OK"}
+
 @app.post("/api/upload")
 async def upload_file(file: UploadFile = File(...)):
     ext = file.filename.split('.')[-1]
